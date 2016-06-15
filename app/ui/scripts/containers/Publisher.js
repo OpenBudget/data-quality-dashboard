@@ -20,7 +20,7 @@ class Publisher extends Component {
       <div>
       {ui.isFetching &&
         <div className='is-fetching'>
-          <div>Loading data..</div>
+          <div>טוען נתונים...</div>
         </div>
       }
       {!ui.isFetching &&
@@ -35,10 +35,10 @@ class Publisher extends Component {
                 performance={activePublisher.performance} />
             </div>
             <section className="publishers">
-              <Table title={'data files'} rows={activePublisher.sources}
+              <Table title='קבצי נתונים'    rows={activePublisher.sources}
                 results={activePublisher.results}
                 columns={ui.tableHeaders.publisher}
-                sort={ui.tableSorters.publisher} parentRoute={route.path} />
+                sort={ui.tableSorters.publisher} route={'data files'} parentRoute={route.path} />
             </section>
           </div>
         </div>

@@ -21,9 +21,9 @@ function getResultData() {
   return utils.getCSVEndpoint(config.get('backend').results)
 }
 
-function getRunData() {
-  return utils.getCSVEndpoint(config.get('backend').runs)
-}
+//function getRunData() {
+//  return utils.getCSVEndpoint(config.get('backend').runs)
+//}
 
 function getPerformanceData() {
   return utils.getCSVEndpoint(config.get('backend').performance)
@@ -31,17 +31,17 @@ function getPerformanceData() {
 
 function makeDB() {
   return Promise.join(getInstance(), getPublisherData(), getSourceData(), getResultData(),
-    getRunData(), getPerformanceData(), processData)
+    /*getRunData(),*/ getPerformanceData(), processData)
 }
 
-function processData(instance, publishers, sources, results, runs, performance) {
+function processData(instance, publishers, sources, results, /*runs,*/ performance) {
   return {
     data: {
       instance: instance,
       publishers: publishers,
       sources: sources,
       results: results,
-      runs: runs,
+      //runs: runs,
       performance: performance
     }
   }

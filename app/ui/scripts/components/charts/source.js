@@ -16,7 +16,7 @@ class SourceChart extends Component {
             <p></p>
           </div>
           <div className='more'>
-            <a className='btn btn-default' href='#' role='button'>More</a>
+            <a className='btn btn-default' href='#' role='button'>עוד</a>
           </div>
         </div>
         <LineChart

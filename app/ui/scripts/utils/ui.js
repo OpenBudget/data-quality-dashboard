@@ -70,39 +70,29 @@ function makeOverview(results, objects, page) {
   let recents = CalcUtils.recentPeriodResults(results)
   if (page === 'main') {
     values = {
-      validPercent: {
-        label: 'valid (%)',
-        help: 'percentage of valid files (no errors) published over the last three months',
-        value: CalcUtils.validPercent(recents) + ''
-      },
       totalScore: {
-        label: 'score (%)',
-        help: 'average score (percent of correctness) for files published over the last three months',
+        label: 'ציון (מתוך 100)',
+        help: 'הציון הממוצע לקבצים שפורסמו בארבעת החודשים האחרונים',
         value: CalcUtils.totalScore(recents, CalcUtils.publisherCount(objects), 3) + ''
       },
       publisherCount: {
-        label: 'publishers',
+        label: 'גופים מדווחים',
         value: CalcUtils.publisherCount(objects) + ''
       },
       sourceCount: {
-        label: 'data files',
+        label: 'קבצי נתונים',
         value: CalcUtils.sourceCount(results) + ''
       }
     }
   } else if (page === 'publisher') {
     values = {
       totalScore: {
-        label: 'score (%)',
-        help: 'average % correct (no errors) published over the last three months',
-        value: CalcUtils.totalScore(recents, 1, 3) + ''
-      },
-      validPercent: {
-        label: 'correct (%)',
-        help: 'percentage of valid files (rounded) published over the last three months',
-        value: CalcUtils.validPercent(recents) + ''
+        label: 'ציון (מתוך 100)',
+        help: 'הציון הממוצע לקבצים שפורסמו בארבעת החודשים האחרונים',
+        value: CalcUtils.totalScore(recents, 1, 1) + ''
       },
       sourceCount: {
-        label: 'data files',
+        label: 'קבצי נתונים',
         value: CalcUtils.sourceCount(results) + ''
       }
     }
@@ -153,7 +143,7 @@ function makeTableBody(objects, results, options) {
       _objWithScore.completelyCorrect = _publisherScore.amountCorrect
       _objWithScore.score = _publisherScore.score
       _objWithScore.lastFileDate = _lastFile.period
-      _objWithScore.lastFileScore = _lastFile.score
+      _objWithScore.lastFileScore = parseInt(_lastFile.score)
       return _objWithScore
     })
   } else if (options.route === 'data files') {
@@ -161,7 +151,7 @@ function makeTableBody(objects, results, options) {
     _unsorted = _.map(objects, function(obj) {
       let _sourceData = CalcUtils.sourceScore(obj.id, results)
       let _objWithScore = _.cloneDeep(obj)
-      _objWithScore.score = _sourceData.score
+      _objWithScore.score = parseInt(_sourceData.score)
       _objWithScore.timestamp = _sourceData.timestamp
       // get period timestamp
       if (obj.period_id) {
@@ -192,8 +182,11 @@ function makeTableBody(objects, results, options) {
 function formatCell(key, value, obj, options) {
   let _cell
   let _c
-  let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-  'August', 'September', 'October', 'November', 'December']
+  //let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+  //'August', 'September', 'October', 'November', 'December']
+  let months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי',
+    'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר']
+
 
   switch (key) {
     case "title":
@@ -218,7 +211,7 @@ function formatCell(key, value, obj, options) {
     case 'lastFileScore':
       if (value <= 49) {
         _c = 'danger'
-      } else if (value <= 99) {
+      } else if (value <= 89) {
         _c = 'warning'
       } else {
         _c = 'success'
@@ -226,7 +219,7 @@ function formatCell(key, value, obj, options) {
       _cell = <td key={key} className={'score ' + _c}>{value + ' %'}</td>
       break
     case 'lastFileDate':
-      let displayed_period = 'No publications'
+      let displayed_period = 'לא נמצאו קבצים'
       let today = new Date()
       let three_months_ago = new Date(today.getFullYear(), today.getMonth()-3)
       let one_year_ago = new Date(today.getFullYear()-1, today.getMonth())
@@ -249,7 +242,7 @@ function formatCell(key, value, obj, options) {
       break
     case 'data':
       if (value) {
-        let data_file_name = _.last(value.split('/'))
+        let data_file_name = "קישור"
         _cell = <td key={key}><a href={value}>{data_file_name}</a></td>
       } else {
         _cell = <td key={key}></td>
@@ -271,7 +264,7 @@ function formatCell(key, value, obj, options) {
           let month_end = months[elements_end[1] - 1]
           let year_start = elements_start[0]
           let year_end = elements_end[0]
-          let displayed_period = month_start + ' ' + year_start + ' to ' + month_end + ' ' + year_end
+          let displayed_period = month_start + ' ' + year_start + ' עד ' + month_end + ' ' + year_end
           _cell = <td key={key}>{displayed_period}</td>
         }
       } else {
@@ -315,8 +308,8 @@ function makeLabel(timestamp) {
   let date = new Date(timestamp)
   let year = date.getFullYear()
   let month = date.getMonth()
-  let abbr_months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
-  'Sep', 'Oct', 'Nov', 'Dec']
+  let abbr_months = ['ינו', 'בפר', 'מרץ', 'אפר', 'מאי', 'יונ', 'יול', 'אוג',
+  'ספט', 'אוק', 'נוב', 'דצמ']
   return abbr_months[month] + ' ' + year
 }
 
@@ -357,7 +350,7 @@ function makeScoreLinePayload(results, performance) {
     labels: labels,
     datasets: [
       {
-        label: "Score",
+        label: "ציון",
         fillColor: "rgba(122, 184, 0,0.2)",
         strokeColor: "rgba(122, 184, 0,1)",
         pointColor: "rgba(122, 184, 0,1)",
@@ -365,16 +358,6 @@ function makeScoreLinePayload(results, performance) {
         pointHighlightFill: "#fff",
         pointHighlightStroke: "rgba(122, 184, 0,1)",
         data: scores
-      },
-      {
-        label: "Correct",
-        fillColor: "rgba(119,119,119,0.2)",
-        strokeColor: "rgba(119,119,119,1)",
-        pointColor: "rgba(119,119,119,1)",
-        pointStrokeColor: "#fff",
-        pointHighlightFill: "#fff",
-        pointHighlightStroke: "rgba(119,119,119,1)",
-        data: valids
       }
     ]
   }
@@ -433,13 +416,12 @@ function makeLegend() {
     fontSize: '13px'
   }
   let score = <li style={liStyle}><span style={scoreColStyle}></span>
-  <span style={textStyle}>{'Score (%)'}</span></li>
-  let valid = <li style={liStyle}><span style={validColStyle}></span>
-  <span style={textStyle}>{'Correct (%)'}</span></li>
+  <span style={textStyle}>{'ציון'}</span></li>
+  //let valid = <li style={liStyle}><span style={validColStyle}></span>
+  //<span style={textStyle}>{'Correct (%)'}</span></li>
   let legend = (
     <ul style={ulStyle}>
       {score}
-      {valid}
     </ul>
   )
   return legend

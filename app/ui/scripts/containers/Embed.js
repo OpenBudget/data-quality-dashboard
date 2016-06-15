@@ -31,7 +31,7 @@ class Embed extends Component {
             <section className='publishers'>
               <Table title={'publishers'} rows={data.publishers}
                 results={data.results} columns={ui.tableHeaders.main}
-                sort={ui.tableSorters.main} parentRoute={route.path} />
+                sort={ui.tableSorters.main} route={'publishers'}  parentRoute={route.path} />
             </section>
           </div>
         </div>

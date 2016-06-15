@@ -14,28 +14,29 @@ function ui(state = {
   isFetching: false,
   tableHeaders: {
     main: [
-      {key: 'title'},
-      {key: 'type'},
-      {key: 'homepage'},
-      {key: 'email'},
-      {key: 'completelyCorrect', label: 'Valid files',
-      help: 'number of files with no errors at all'},
-      {key: 'score', label: 'All-time Score'},
-      {key: 'lastFileDate', label: 'last file'},
-      {key: 'lastFileScore', label: 'Current Score', help: 'Average score (percent of correctness) for files published over the last three months'}
+      {key: 'title', label: 'שם הגוף'},
+      {key: 'type', label: 'סוג'},
+      //{key: 'homepage'},
+      //{key: 'email'},
+      //{key: 'completelyCorrect', label: 'Valid files',
+      //help: 'number of files with no errors at all'},
+      {key: 'score', label: 'הציון הממוצע, מתייחס גם לקבצים חסרים'},
+      {key: 'lastFileDate', label: 'הדו״ח האחרון'},
+      {key: 'lastFileScore', label: 'הציון של הדו״ח האחרון'}
     ],
     publisher: [
-      {key:'period_id', label:'period'},
-      {key:'title'}, {key:'data', label:'URL'},
-      {key:'format'},
-      {key:'report', label:'Error details'},
-      {key:'score'},
-      {key:'schema'}
+      {key:'period_id', label:'תקופה'},
+      {key:'title', label:"כותרת"},
+      {key:'data', label:'קישור לדו״ח'},
+      /*{key:'format'},*.
+      /*{key:'report', label:'Error details'},*/
+      {key:'score', label:"ציון הדו״ח"}//,
+      /*{key:'schema'}*/
     ]
   },
   tableSorters: {
     main: [
-      ['lastFileScore', false],
+      ['score', false],
       ['title', true]
     ],
     publisher: [

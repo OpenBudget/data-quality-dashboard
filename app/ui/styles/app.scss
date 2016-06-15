@@ -104,3 +104,26 @@ $header-gradient: radial-gradient(circle at 50% top, rgba($green,0.6) 0%,rgba($g
   background-color: #69b93b;
   background-image: none;
 }
+
+body {
+  direction: rtl !important;
+  font-family: 'Rubik', sans-serif !important;
+}
+
+table.table th {
+  text-align: right !important;
+}
+
+@media (min-width: 992px) {
+  .dashboard .publishers .intro .text {
+    float: right;
+  }
+}
+
+.header {
+  background: white;
+  height: 75px;
+  img {
+    height:70px;
+  }
+}

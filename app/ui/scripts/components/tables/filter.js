@@ -10,7 +10,7 @@ class TableFilter extends Component {
       <Input
         disabled
         type='text'
-        placeholder='Filter by keywords'
+        placeholder='סינון לפי מילות מפתח'
         ref='input'
         onChange={UIUtils.filterTable()}
       />

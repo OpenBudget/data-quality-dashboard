@@ -8,7 +8,7 @@ import TableHead from './head'
 
 class TableComponent extends Component {
   render() {
-    const {columns, rows, results, sort, title, parentRoute } = this.props
+    const {columns, rows, results, sort, title, route, parentRoute } = this.props
     return (
       <div className='container'>
         <div className='intro'>
@@ -27,7 +27,7 @@ class TableComponent extends Component {
           </thead>
           <tbody>
             {UIUtils.makeTableBody(rows, results,
-              {'route': title, 'sort': sort, 'columns': columns, 'parentRoute': parentRoute})}
+              {'route': route, 'sort': sort, 'columns': columns, 'parentRoute': parentRoute})}
           </tbody>
         </Table>
       </div>

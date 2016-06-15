@@ -13,7 +13,7 @@ function sourceCount(results) {
 function recentPeriodResults(results) {
   let today = new Date()
   let periodTimestamp
-  let three_months_ago = new Date(today.getFullYear(), today.getMonth()-3)
+  let three_months_ago = today-135*24*3600*1000;
 
   let recentPeriodOnly = _.filter(results, function(obj) {
     if (obj.period_id) {
@@ -34,7 +34,7 @@ function recentPeriodResults(results) {
 
 function timelyPercent(results) {
   let valid = _.filter(results, function(obj) {
-    if (obj.score >= 9) {
+    if (obj.score > 0) {
       return obj
     }
   })
@@ -45,7 +45,7 @@ function validPercent(results) {
   let validPercent = 0
   let valid = _.filter(results, function(obj) {
     let score = obj.score ? obj.score : 0
-    if (score == 10) {
+    if (score > 0) {
       return obj
     }
   })
@@ -56,15 +56,14 @@ function validPercent(results) {
 }
 
 function totalScore(results, numberOfPublishers, numberOfTimeUnits) {
-  let scores = []
-  let score = 0
-  let expectedResults = numberOfPublishers * numberOfTimeUnits
+  let scores = {}
+  let score = 0;
   _.forEach(results, function(obj) {
-   scores.push(parseInt(obj.score))
+   scores[obj.publisher_id] = parseInt(obj.score_to_date);
   })
-  if (scores.length > 0) {
+  if (_.keys(scores).length > 0) {
     score = Math.round(
-      _.reduce(scores, function(sum, n) {return sum + n}) / expectedResults * 10)
+      _.reduce(_.values(scores), function(sum, n) {return sum + n}) / _.keys(scores).length);
   }
   return score
 }
@@ -76,17 +75,15 @@ function publisherScore(publisher, results) {
   // get all scores for this publisher from results
   _.forEach(results, function(obj) {
     if (obj.publisher_id === publisher) {
+      if (!publisherScore && obj.score_to_date) {
+        publisherScore = parseInt(obj.score_to_date);
+      }
       let score = obj.score ? parseInt(obj.score) : 0
-      scores.push(score)
-      if (score === 10) {
+      if (score > 0) {
         countCorrect += 1
       }
     }
   })
-  // set the publisher score to: sum of scores / number of scores * 10 (to have a percentage)
-  if (scores.length > 0) {
-    publisherScore = Math.round(_.reduce(scores, function(sum, n) {return sum + n}) / scores.length * 10)
-  }
   return {'score': publisherScore, 'amountCorrect': countCorrect}
 }
 
@@ -96,9 +93,6 @@ function lastFile(publisher, results) {
     if (obj.publisher_id === publisher) {
       // we're after the timestamp of the publisher
       return new Date(_.last(obj.period_id.split('/')))
-    } else {
-      // if this is not the publisher we want, we return empty string
-      return 0
     }
   })
 
@@ -109,7 +103,7 @@ function lastFile(publisher, results) {
         _.last(publication.period_id.split('/')))
     }
     if (publication.score) {
-      lastFile.score = parseInt(publication.score) * 10
+      lastFile.score = parseInt(publication.score)
     }
   }
   return lastFile
@@ -124,7 +118,7 @@ function sourceScore(source, results) {
     if (obj.source_id === source) {
       let score = obj.score ? obj.score : 0
       let timestamp = Date.parse(obj.timestamp)
-      scores.push({score: parseInt(score) * 10, timestamp: timestamp})
+      scores.push({score: parseInt(score), timestamp: timestamp})
     }
   })
   // set the source score to: the latest score

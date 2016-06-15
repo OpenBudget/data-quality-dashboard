@@ -3,6 +3,8 @@
 //spend publishing dashboard
 
 .dashboard {
+  direction: rtl !important;
+
   .overview {
     @include make-row();
     padding:0;

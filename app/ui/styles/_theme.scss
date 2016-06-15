@@ -84,6 +84,7 @@ html {
 
 .counter {
   margin-top:20px;
+  direction: ltr;
 
   .value > span {
     background-color:$gray-dark;
@@ -120,6 +121,7 @@ html {
     margin-top:15px;
     display:block;
     padding:0;
+    direction: rtl;
   }
  
   &.inverse {

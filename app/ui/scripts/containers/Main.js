@@ -21,7 +21,7 @@ class Main extends Component {
       <div>
       {ui.isFetching &&
         <div className='is-fetching'>
-          <div>Loading data..</div>
+          <div>טוען נתונים...</div>
         </div>
       }
       {!ui.isFetching &&
@@ -31,20 +31,25 @@ class Main extends Component {
               <Overview instance={data.instance}
                 results={data.results} publishers={data.publishers} />
             </div>
-            <section className='publishers'>
-              <Table title={'publishers'} rows={data.publishers}
-                results={data.results} columns={ui.tableHeaders.main}
-                sort={ui.tableSorters.main} parentRoute={route.path} />
-            </section>
             {data.instance.context &&
             <section className='context'>
-              <div className='container'>
-                <h2>What's this all about?</h2>
+              <div className='container col-md-5 col-md-offset-1'>
+                <h2>איך מחושב המדד?</h2>
+                <div className='explanation col-md-12'
+                     dangerouslySetInnerHTML={this.safe(data.instance['method'] || '')} />
+              </div>
+              <div className='container col-md-5'>
+                <h2>מה בדיוק הסיפור?</h2>
                 <div className='explanation col-md-12'
                      dangerouslySetInnerHTML={this.safe(data.instance.context || '')} />
               </div>
             </section>
             }
+            <section className='publishers'>
+              <Table title='גופים מדווחים' rows={data.publishers}
+                results={data.results} columns={ui.tableHeaders.main}
+                sort={ui.tableSorters.main} route='publishers' parentRoute={route.path} />
+            </section>
           </div>
         </div>
       }
